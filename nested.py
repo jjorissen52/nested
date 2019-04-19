@@ -98,6 +98,8 @@ def nested_filter(indicator_func, obj):
         elif isinstance(obj, list):
             for i, v in enumerate(obj):
                 _find_filtered_path(v, [*current_path, i], path_list)
+                if indicator_func(i, v):
+                    path_list.append([*current_path, i])
 
     _find_filtered_path(obj, _current_path, _path_list)
     return _path_list
@@ -117,6 +119,10 @@ def nested_sibling_filter(indicator_func, sibling_key_func, obj):
         elif isinstance(obj, list):
             for i, v in enumerate(obj):
                 _find_filtered_path(v, [*current_path, i], path_list)
+                if indicator_func(i, v):
+                    sibling_key = sibling_key_func(i, v, obj)
+                    if sibling_key:
+                        path_list.append(([*current_path, i], [*current_path, sibling_key]))
 
     _find_filtered_path(obj, _current_path, _path_list)
     return _path_list
@@ -134,6 +140,8 @@ def nested_parent_filter(indicator_func, obj):
         elif isinstance(obj, list):
             for i, v in enumerate(obj):
                 _find_filtered_path(v, [*current_path, i], path_list)
+                if indicator_func(i, v):
+                    path_list.append([*current_path])
 
     _find_filtered_path(obj, _current_path, _path_list)
     return _path_list
